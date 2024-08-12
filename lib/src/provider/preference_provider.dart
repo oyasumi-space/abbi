@@ -9,6 +9,10 @@ final prefModsPathProvider =
     NotifierProvider<PreferenceNotifier<String?, String>, String?>(
         () => PreferenceNotifier<String?, String>('mods_path'));
 
+final prefGamePathProvider =
+    NotifierProvider<PreferenceNotifier<String?, String>, String?>(
+        () => PreferenceNotifier<String?, String>('game_path'));
+
 // S is state, V is encoded saved value
 class PreferenceNotifier<S, V> extends Notifier<S> {
   final String key;

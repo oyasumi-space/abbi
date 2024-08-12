@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'page/home_page.dart';
+import 'window/main_window.dart';
 
 class App extends ConsumerWidget {
   const App({super.key});
@@ -9,7 +9,7 @@ class App extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return const MaterialApp(
-      home: HomePage(),
+      home: MainWindow(),
     );
   }
 }

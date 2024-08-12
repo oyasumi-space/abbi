@@ -9,8 +9,8 @@ import '../provider/mods_file_provider.dart';
 
 final installedModsShowErrorProvider = StateProvider<bool>((ref) => false);
 
-class InstalledModsListView extends ConsumerWidget {
-  const InstalledModsListView({super.key});
+class InstalledModsPage extends ConsumerWidget {
+  const InstalledModsPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -71,20 +71,18 @@ class _InstalledModsListItemView extends ConsumerWidget {
         final version = value.version;
         return Card(
           child: ListTile(
+            leading: Wrap(
+              children: [
+                Switch(
+                  value: enabledMods.contains(fse),
+                  onChanged: (enabled) {
+                    ref.read(enabledModsProvider.notifier).change(fse, enabled);
+                  },
+                ),
+              ],
+            ),
             title: Text(name),
             subtitle: Text('$id - v$version - $path'),
-            leading: Checkbox(
-              value: enabledMods.contains(fse),
-              onChanged: (enabled) {
-                ref
-                    .read(enabledModsProvider.notifier)
-                    .change(fse, enabled ?? false);
-              },
-            ),
-            trailing: const IconButton(
-              icon: Icon(Icons.delete),
-              onPressed: null,
-            ),
           ),
         );
     }
