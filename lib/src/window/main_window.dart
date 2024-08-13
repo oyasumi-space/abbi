@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../provider/mods_file_provider.dart';
+import '../provider/available_mods_provider.dart';
 import '../view/run_with_mods_floating_action_button.dart';
 import '../page/settting_page.dart';
 import '../page/installed_mods_page.dart';
@@ -26,14 +25,14 @@ class MainWindow extends HookConsumerWidget {
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) {
-                  return SettingPage();
+                  return const SettingPage();
                 },
               ));
             },
           ),
           IconButton(
             onPressed: () {
-              ref.invalidate(installedModsFseProvider);
+              ref.invalidate(availableModsProvider);
             },
             icon: const Icon(Icons.refresh),
           ),
@@ -57,8 +56,8 @@ class MainWindow extends HookConsumerWidget {
           Expanded(
             child: PageView(
               controller: page,
-              children: [
-                const InstalledModsPage(),
+              children: const [
+                InstalledModsPage(),
                 SettingPage(),
               ],
             ),

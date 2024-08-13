@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'mods_file_provider.dart';
+import 'available_mods_provider.dart';
 
 final enabledModsProvider =
     NotifierProvider<EnabledModsNotifier, Set<FileSystemEntity>>(
@@ -17,8 +17,8 @@ class EnabledModsNotifier extends Notifier<Set<FileSystemEntity>> {
   Future<void> change(FileSystemEntity fse, bool enabled) async {
     if (enabled) {
       final manifest =
-          await ref.read(installedModManifestFamilyProvider(fse).future);
-      final map = await ref.read(installedModsIdMapProvider.future);
+          await ref.read(availableModManifestFamilyProvider(fse).future);
+      final map = await ref.read(availableModsIdMapProvider.future);
       final set = {...state, fse};
       for (final cfse in map[manifest.id] ?? {}) {
         if (fse == cfse) continue;

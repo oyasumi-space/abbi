@@ -4,8 +4,8 @@ import 'package:path/path.dart' as $path;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../provider/available_mods_provider.dart';
 import '../provider/enabled_mods_provider.dart';
-import '../provider/mods_file_provider.dart';
 
 final installedModsShowErrorProvider = StateProvider<bool>((ref) => false);
 
@@ -14,7 +14,7 @@ class InstalledModsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    switch (ref.watch(installedModsFseProvider)) {
+    switch (ref.watch(availableModsProvider)) {
       case AsyncLoading():
         return const Center(child: CircularProgressIndicator());
       case AsyncError(:final error):
@@ -41,7 +41,7 @@ class _InstalledModsListItemView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final enabledMods = ref.watch(enabledModsProvider);
     final path = $path.basename(fse.path) + ((fse is Directory) ? '/' : '');
-    switch (ref.watch(installedModManifestFamilyProvider(fse))) {
+    switch (ref.watch(availableModManifestFamilyProvider(fse))) {
       case AsyncLoading():
         return const Card(
           child: ListTile(
