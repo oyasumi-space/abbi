@@ -14,8 +14,8 @@ class RunWithModsFloatingActionButton extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final launching = useState(false);
     final registryOmoriRunning = ref.watch(registryOmoriRunningProvider);
-    ref.listen(registryOmoriRunningProvider, (oldRunning, running) {
-      if (running == 0 && oldRunning == 1) {
+    ref.listen(registryOmoriRunningProvider, (_, running) {
+      if (running == 0) {
         ref.read(linksProvider.notifier).delete();
       }
     });
