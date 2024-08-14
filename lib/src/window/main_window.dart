@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../page/about_page.dart';
 import '../provider/available_mods_provider.dart';
 import '../view/run_with_mods_floating_action_button.dart';
 import '../page/settting_page.dart';
@@ -17,7 +18,7 @@ class MainWindow extends HookConsumerWidget {
     final isSmallScreen = MediaQuery.of(context).size.width <= 768;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Abbi The OMORI Mod Manager'),
+        title: const Text('Abbi'),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
@@ -47,6 +48,7 @@ class MainWindow extends HookConsumerWidget {
               children: const [
                 AvailableModsPage(),
                 SettingPage(),
+                AboutPage(),
               ],
             ),
           ),
@@ -103,6 +105,13 @@ class _MainWindowDrawer extends ConsumerWidget {
               page.jumpToPage(1);
             },
           ),
+          ListTile(
+            leading: const Icon(Icons.info),
+            title: const Text('About'),
+            onTap: () {
+              page.jumpToPage(2);
+            },
+          )
         ],
       ),
     );
