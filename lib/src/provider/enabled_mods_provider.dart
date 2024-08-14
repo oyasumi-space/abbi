@@ -1,33 +1,37 @@
-import 'dart:io';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../entity/mod.dart';
 import 'available_mods_provider.dart';
 
-final enabledModsProvider =
-    NotifierProvider<EnabledModsNotifier, Set<FileSystemEntity>>(
-        EnabledModsNotifier.new);
+final enabledModsProvider = FutureProvider<List<Mod>>((ref) async {
+  final mods = await ref.watch(availableModsProvider.future);
+  final names = ref.watch(enabledModsNameProvider);
+  return mods.where((mod) => names.contains(mod.name)).toList();
+});
 
-class EnabledModsNotifier extends Notifier<Set<FileSystemEntity>> {
+final enabledModsNameProvider =
+    NotifierProvider<EnabledModsNameNotifier, Set<String>>(
+        EnabledModsNameNotifier.new);
+
+class EnabledModsNameNotifier extends Notifier<Set<String>> {
   @override
-  Set<FileSystemEntity> build() {
+  Set<String> build() {
     return {};
   }
 
-  Future<void> change(FileSystemEntity fse, bool enabled) async {
+  Future<void> change(Mod mod, bool enabled) async {
     if (enabled) {
-      final manifest =
-          await ref.read(availableModManifestFamilyProvider(fse).future);
       final map = await ref.read(availableModsIdMapProvider.future);
-      final set = {...state, fse};
-      for (final cfse in map[manifest.id] ?? {}) {
-        if (fse == cfse) continue;
-        set.remove(cfse);
-      }
+      final set = {...state};
+
+      set.removeAll(map[mod.manifest.id] ?? [].map((mod) => mod.name));
+
+      set.add(mod.name);
+
       state = set;
     } else {
       final set = {...state};
-      set.remove(fse);
+      set.remove(mod.name);
       state = set;
     }
   }

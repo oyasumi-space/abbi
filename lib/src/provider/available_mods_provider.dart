@@ -7,51 +7,38 @@ import 'package:archive/archive.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as $path;
 
+import '../entity/mod.dart';
 import '../entity/mod_manifest.dart';
 import '../util/compute_manager.dart';
 import '../util/exceptions.dart';
 import 'preference_provider.dart';
 
 final availableModsIdMapProvider =
-    FutureProvider<Map<String, Set<FileSystemEntity>>>((ref) async {
-  final result = <String, Set<FileSystemEntity>>{};
-  final manifests = await ref.watch(avaiableModsManifestProvider.future);
-  for (final pair in manifests) {
-    if (!result.containsKey(pair.$1.id)) {
-      result[pair.$1.id] = {};
+    FutureProvider<Map<String, List<Mod>>>((ref) async {
+  final result = <String, List<Mod>>{};
+  final mods = await ref.watch(availableModsProvider.future);
+  for (final mod in mods) {
+    if (!result.containsKey(mod.manifest.id)) {
+      result[mod.manifest.id] = [mod];
+    } else {
+      result[mod.manifest.id]!.add(mod);
     }
-    result[pair.$1.id]!.add(pair.$2);
   }
   return result;
 });
 
-final avaiableModsManifestProvider =
-    FutureProvider<List<(ModManifest, FileSystemEntity)>>((ref) async {
-  final fses = await ref.watch(availableModsProvider.future);
-  final result = await Future.wait(fses.map((fse) async {
-    try {
-      return (
-        await ref.watch(availableModManifestFamilyProvider(fse).future),
-        fse,
-      );
-    } catch (e) {
-      return null;
-    }
+final availableModsProvider = FutureProvider<List<Mod>>((ref) async {
+  final fses = await ref.watch(availableModsFseProvider.future);
+  return await Future.wait(fses.map((fse) async {
+    return ref.watch(availableModsFamilyProvider(fse).future);
   }));
-  return result.where((e) => e != null).toList().cast();
 });
 
-final availableModsManifestProvider =
-    FutureProvider<List<ModManifest>>((ref) async {
-  final fses = await ref.watch(availableModsProvider.future);
-  final result = await Future.wait(fses.map((fse) async {
-    try {
-      return await ref.watch(availableModManifestFamilyProvider(fse).future);
-    } catch (e) {
-      return null;
-    }
-  }));
-  return result.where((e) => e != null).toList().cast();
+final availableModsFamilyProvider =
+    FutureProvider.family<Mod, FileSystemEntity>((ref, fse) async {
+  final manifest =
+      await ref.watch(availableModManifestFamilyProvider(fse).future);
+  return Mod(manifest: manifest, fse: fse);
 });
 
 final availableModManifestFamilyProvider =
@@ -71,7 +58,7 @@ final availableModManifestFamilyProvider =
   }
 });
 
-final availableModsProvider =
+final availableModsFseProvider =
     FutureProvider<List<FileSystemEntity>>((ref) async {
   final path = ref.watch(prefModsPathProvider);
   if (path == null) {

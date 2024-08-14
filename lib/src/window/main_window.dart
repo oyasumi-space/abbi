@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../provider/available_mods_provider.dart';
 import '../view/run_with_mods_floating_action_button.dart';
 import '../page/settting_page.dart';
-import '../page/installed_mods_page.dart';
+import '../page/available_mods_page.dart';
 
 class MainWindow extends HookConsumerWidget {
   const MainWindow({super.key});
@@ -15,7 +15,6 @@ class MainWindow extends HookConsumerWidget {
     final page = usePageController();
 
     final isSmallScreen = MediaQuery.of(context).size.width <= 768;
-    final isShowErrorMods = ref.watch(installedModsShowErrorProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Abbi The OMORI Mod Manager'),
@@ -32,22 +31,11 @@ class MainWindow extends HookConsumerWidget {
           ),
           IconButton(
             onPressed: () {
-              ref.invalidate(availableModsProvider);
+              ref.invalidate(availableModsFseProvider);
             },
             icon: const Icon(Icons.refresh),
           ),
-          PopupMenuButton(
-            itemBuilder: (context) => [
-              CheckedPopupMenuItem(
-                checked: isShowErrorMods,
-                onTap: () {
-                  ref.read(installedModsShowErrorProvider.notifier).state =
-                      !isShowErrorMods;
-                },
-                child: const Text('Show errored mods'),
-              ),
-            ],
-          ),
+          const _MainWindowPopupShowButton(),
         ],
       ),
       body: Row(
@@ -57,7 +45,7 @@ class MainWindow extends HookConsumerWidget {
             child: PageView(
               controller: page,
               children: const [
-                InstalledModsPage(),
+                AvailableModsPage(),
                 SettingPage(),
               ],
             ),
@@ -66,6 +54,27 @@ class MainWindow extends HookConsumerWidget {
       ),
       floatingActionButton: const RunWithModsFloatingActionButton(),
       drawer: isSmallScreen ? _MainWindowDrawer(page) : null,
+    );
+  }
+}
+
+class _MainWindowPopupShowButton extends ConsumerWidget {
+  const _MainWindowPopupShowButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isShowErrorMods = ref.watch(availableModsShowErrorProvider);
+    return PopupMenuButton(
+      itemBuilder: (context) => [
+        CheckedPopupMenuItem(
+          checked: isShowErrorMods,
+          onTap: () {
+            ref.read(availableModsShowErrorProvider.notifier).state =
+                ref.read(availableModsShowErrorProvider);
+          },
+          child: const Text('Show errored mods'),
+        ),
+      ],
     );
   }
 }

@@ -4,13 +4,14 @@ import 'package:path/path.dart' as $path;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../entity/mod.dart';
 import '../provider/available_mods_provider.dart';
 import '../provider/enabled_mods_provider.dart';
 
-final installedModsShowErrorProvider = StateProvider<bool>((ref) => false);
+final availableModsShowErrorProvider = StateProvider<bool>((ref) => false);
 
-class InstalledModsPage extends ConsumerWidget {
-  const InstalledModsPage({super.key});
+class AvailableModsPage extends ConsumerWidget {
+  const AvailableModsPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -23,7 +24,7 @@ class InstalledModsPage extends ConsumerWidget {
         final fses = value;
         return ListView.builder(
           itemBuilder: (context, i) {
-            return _InstalledModsListItemView(fses[i]);
+            return _AvailableModsListItemView(fses[i]);
           },
           itemCount: fses.length,
           padding: const EdgeInsets.only(bottom: 80),
@@ -32,16 +33,17 @@ class InstalledModsPage extends ConsumerWidget {
   }
 }
 
-class _InstalledModsListItemView extends ConsumerWidget {
-  const _InstalledModsListItemView(this.fse);
+class _AvailableModsListItemView extends ConsumerWidget {
+  const _AvailableModsListItemView(this.mod);
 
-  final FileSystemEntity fse;
+  final Mod mod;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final enabledMods = ref.watch(enabledModsProvider);
-    final path = $path.basename(fse.path) + ((fse is Directory) ? '/' : '');
-    switch (ref.watch(availableModManifestFamilyProvider(fse))) {
+    final enabledModsName = ref.watch(enabledModsNameProvider);
+    final path =
+        $path.basename(mod.fse.path) + ((mod.fse is Directory) ? '/' : '');
+    switch (ref.watch(availableModManifestFamilyProvider(mod.fse))) {
       case AsyncLoading():
         return const Card(
           child: ListTile(
@@ -51,7 +53,7 @@ class _InstalledModsListItemView extends ConsumerWidget {
       case AsyncError(:final error):
         return Consumer(
           builder: (context, ref, child) {
-            if (ref.watch(installedModsShowErrorProvider)) {
+            if (ref.watch(availableModsShowErrorProvider)) {
               return Card(
                 child: ListTile(
                   title: Text(path),
@@ -74,9 +76,11 @@ class _InstalledModsListItemView extends ConsumerWidget {
             leading: Wrap(
               children: [
                 Switch(
-                  value: enabledMods.contains(fse),
+                  value: enabledModsName.contains(mod.name),
                   onChanged: (enabled) {
-                    ref.read(enabledModsProvider.notifier).change(fse, enabled);
+                    ref
+                        .read(enabledModsNameProvider.notifier)
+                        .change(mod, enabled);
                   },
                 ),
               ],
