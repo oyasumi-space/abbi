@@ -24,7 +24,9 @@ class EnabledModsNameNotifier extends Notifier<Set<String>> {
       final map = await ref.read(availableModsIdMapProvider.future);
       final set = {...state};
 
-      set.removeAll(map[mod.manifest.id] ?? [].map((mod) => mod.name));
+      for (final sameIdMod in map[mod.manifest.id] ?? <Mod>[]) {
+        set.remove(sameIdMod.name);
+      }
 
       set.add(mod.name);
 
