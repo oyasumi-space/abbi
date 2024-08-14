@@ -20,7 +20,6 @@ class LinksNotifier extends Notifier<List<FileSystemEntity>> {
     if (gamePath == null) throw Exception('Game path not set');
     List<FileSystemEntity> links = [];
     for (final mod in await ref.read(enabledModsProvider.future)) {
-      // if (fse is! File) continue; // todo directory mods
       links.add(await Link($path.join(gamePath, 'www/mods', mod.name))
           .create(mod.fse.path));
     }
