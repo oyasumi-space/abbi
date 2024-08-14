@@ -8,7 +8,14 @@ final packageInfoProvider = FutureProvider<PackageInfo>((ref) async {
 });
 
 final commitIdProvider = FutureProvider<String>((ref) async {
-  return (await rootBundle.loadString('.git/ORIG_HEAD')).trim();
+  // https://stackoverflow.com/a/77422508/7257132
+  final head = await rootBundle.loadString('.git/HEAD');
+  if (head.startsWith('ref: ')) {
+    final branchName = head.split('ref: refs/heads/').last.trim();
+    return await rootBundle.loadString('.git/refs/heads/$branchName');
+  } else {
+    return head;
+  }
 });
 
 class AboutPage extends ConsumerWidget {
