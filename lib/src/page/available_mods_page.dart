@@ -41,8 +41,7 @@ class _AvailableModsListItemView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final enabledModsName = ref.watch(enabledModsNameProvider);
-    final path =
-        $path.basename(mod.fse.path) + ((mod.fse is Directory) ? '/' : '');
+    final path = $path.basename(mod.fse.path);
     switch (ref.watch(availableModManifestFamilyProvider(mod.fse))) {
       case AsyncLoading():
         return const Card(
@@ -66,11 +65,13 @@ class _AvailableModsListItemView extends ConsumerWidget {
           },
         );
 
-      // return Card(child: Center(child: Text(error.toString())));
       case AsyncData(:final value):
         final id = value.id;
         final name = value.name;
         final version = value.version;
+        final isFile = mod.fse is File;
+        final subtitle =
+            '$id - v$version - ${isFile ? '📑' : '📂'}${mod.name}${isFile ? '' : '/'}';
         return Card(
           child: ListTile(
             leading: Wrap(
@@ -86,7 +87,7 @@ class _AvailableModsListItemView extends ConsumerWidget {
               ],
             ),
             title: Text(name),
-            subtitle: Text('$id - v$version - $path'),
+            subtitle: Text(subtitle),
           ),
         );
     }
