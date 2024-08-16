@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../entity/mod.dart';
 import '../provider/available_mods_provider.dart';
 import '../provider/enabled_mods_provider.dart';
+import '../provider/profile_provider.dart';
 
 final availableModsShowErrorProvider = StateProvider<bool>((ref) => false);
 
@@ -80,8 +81,8 @@ class _AvailableModsListItemView extends ConsumerWidget {
                   value: enabledModsName.contains(mod.name),
                   onChanged: (enabled) {
                     ref
-                        .read(enabledModsNameProvider.notifier)
-                        .change(mod, enabled);
+                        .read(profilesProvider.notifier)
+                        .changeEnabledCurrentProfileMod(mod, enabled);
                   },
                 ),
               ],

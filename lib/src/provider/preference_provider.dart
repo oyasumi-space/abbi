@@ -13,6 +13,10 @@ final prefGamePathProvider =
     NotifierProvider<PreferenceNotifier<String?, String>, String?>(
         () => PreferenceNotifier<String?, String>('game_path'));
 
+final prefCurrentProfileNameProvider =
+    NotifierProvider<PreferenceNotifier<String?, String>, String?>(
+        () => PreferenceNotifier<String?, String>('current_profile'));
+
 // S is state, V is encoded saved value
 class PreferenceNotifier<S, V> extends Notifier<S> {
   final String key;
@@ -27,18 +31,22 @@ class PreferenceNotifier<S, V> extends Notifier<S> {
   Future<void> set(S s) {
     state = s;
     final v = encode(s);
-    if (v is int) {
-      return _sp.setInt(key, v);
-    } else if (v is double) {
-      return _sp.setDouble(key, v);
-    } else if (v is bool) {
-      return _sp.setBool(key, v);
-    } else if (v is String) {
-      return _sp.setString(key, v);
-    } else if (v is List<String>) {
-      return _sp.setStringList(key, v);
-    } else {
-      throw UnimplementedError();
+    if (v == null) {
+      return _sp.remove(key);
+    }
+    switch (v) {
+      case int _:
+        return _sp.setInt(key, v as int);
+      case double _:
+        return _sp.setDouble(key, v as double);
+      case bool _:
+        return _sp.setBool(key, v as bool);
+      case String _:
+        return _sp.setString(key, v as String);
+      case List<String> _:
+        return _sp.setStringList(key, v as List<String>);
+      default:
+        throw UnimplementedError();
     }
   }
 
@@ -51,7 +59,20 @@ class PreferenceNotifier<S, V> extends Notifier<S> {
   }
 
   V? _read() {
-    return _sp.get(key) as V?;
+    switch (V) {
+      case const (int):
+        return _sp.getInt(key) as V?;
+      case const (double):
+        return _sp.getDouble(key) as V?;
+      case const (bool):
+        return _sp.getBool(key) as V?;
+      case const (String):
+        return _sp.getString(key) as V?;
+      case const (List<String>):
+        return _sp.getStringList(key) as V?;
+      default:
+        throw UnimplementedError();
+    }
   }
 
   SharedPreferences get _sp => ref.read(sharedPreferencesProvider);

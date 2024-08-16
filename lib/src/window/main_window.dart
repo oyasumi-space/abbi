@@ -3,10 +3,18 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../page/about_page.dart';
+import '../page/profiles_page.dart';
 import '../provider/available_mods_provider.dart';
 import '../view/run_with_mods_floating_action_button.dart';
 import '../page/settting_page.dart';
 import '../page/available_mods_page.dart';
+
+const _pages = <(Widget, IconData, String)>[
+  (AvailableModsPage(), Icons.description, 'Mods'),
+  (ProfilesPage(), Icons.person, 'Profiles'),
+  (SettingPage(), Icons.settings, 'Settings'),
+  (AboutPage(), Icons.info, 'About'),
+];
 
 class MainWindow extends HookConsumerWidget {
   const MainWindow({super.key});
@@ -45,11 +53,7 @@ class MainWindow extends HookConsumerWidget {
           Expanded(
             child: PageView(
               controller: page,
-              children: const [
-                AvailableModsPage(),
-                SettingPage(),
-                AboutPage(),
-              ],
+              children: _pages.map((e) => e.$1).toList(),
             ),
           ),
         ],
@@ -89,30 +93,18 @@ class _MainWindowDrawer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Drawer(
-      child: ListView(
-        children: [
-          ListTile(
-            leading: const Icon(Icons.description),
-            title: const Text('Mods'),
+      child: ListView.builder(
+        itemBuilder: (context, i) {
+          final e = _pages[i];
+          return ListTile(
+            leading: Icon(e.$2),
+            title: Text(e.$3),
             onTap: () {
-              page.jumpToPage(0);
+              page.jumpToPage(i);
             },
-          ),
-          ListTile(
-            leading: const Icon(Icons.settings),
-            title: const Text('Settings'),
-            onTap: () {
-              page.jumpToPage(1);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.info),
-            title: const Text('About'),
-            onTap: () {
-              page.jumpToPage(2);
-            },
-          )
-        ],
+          );
+        },
+        itemCount: _pages.length,
       ),
     );
   }

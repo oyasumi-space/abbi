@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../entity/mod.dart';
 import 'available_mods_provider.dart';
+import 'profile_provider.dart';
 
 final enabledModsProvider = FutureProvider<List<Mod>>((ref) async {
   final mods = await ref.watch(availableModsProvider.future);
@@ -9,17 +10,22 @@ final enabledModsProvider = FutureProvider<List<Mod>>((ref) async {
   return mods.where((mod) => names.contains(mod.name)).toList();
 });
 
-final enabledModsNameProvider =
-    NotifierProvider<EnabledModsNameNotifier, Set<String>>(
-        EnabledModsNameNotifier.new);
+final enabledModsNameProvider = Provider<List<String>>((ref) {
+  final profile = ref.watch(currentProfileProvider);
+  return profile.mods;
+});
 
 class EnabledModsNameNotifier extends Notifier<Set<String>> {
   @override
   Set<String> build() {
-    return {};
+    final profile = ref.watch(currentProfileProvider);
+    return profile.mods.toSet();
   }
 
   Future<void> change(Mod mod, bool enabled) async {
+    ref
+        .read(profilesProvider.notifier)
+        .changeEnabledCurrentProfileMod(mod, enabled);
     if (enabled) {
       final map = await ref.read(availableModsIdMapProvider.future);
       final set = {...state};

@@ -1,5 +1,4 @@
-// mod file/folder entities
-import 'dart:convert';
+import 'dart:convert' as $convert;
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -47,7 +46,8 @@ final availableModManifestFamilyProvider =
     case Directory _:
       final file = File($path.join(fse.path, 'mod.json'));
       if (!await file.exists()) throw Exceptions.notFoundManifest;
-      return ModManifest.fromJson(jsonDecode(await file.readAsString()));
+      return ModManifest.fromJson(
+          $convert.json.decode(await file.readAsString()));
     case File _:
       if (!fse.path.endsWith('.zip')) {
         throw Exceptions.invalidModFile;
@@ -74,8 +74,8 @@ final _zipModOpenerComputeManager = ComputeManager<File, ModManifest>((file) {
   final manifestFile = zip.findFile($path.join(path, 'mod.json'));
   if (manifestFile == null) throw Exceptions.notFoundManifest;
 
-  final manifest = ModManifest.fromJson(
-      jsonDecode(utf8.decode(manifestFile.content as Uint8List)));
+  final manifest = ModManifest.fromJson($convert.json
+      .decode($convert.utf8.decode(manifestFile.content as Uint8List)));
 
   if ('${manifest.id}/' != path) throw Exceptions.invalidModFile;
   return manifest;
