@@ -14,11 +14,12 @@ class ModsPage extends ConsumerWidget {
 
     switch (modsFSEAsync) {
       case AsyncData(:final value):
-        return ListView.builder(
+        return ListView.separated(
           itemBuilder: (context, index) {
             final fse = value[index];
             return _ModsPageItem(fse);
           },
+          separatorBuilder: (context, index) => const Divider(),
           itemCount: value.length,
         );
       case AsyncLoading():
@@ -45,27 +46,21 @@ class _ModsPageItem extends ConsumerWidget {
         subtitle += ' - v${value.version}';
         subtitle +=
             ' - ${mod.isFile ? '🗒️' : '📁'}${mod.name}${mod.isFile ? '' : '/'}';
-        return Card(
-          child: SwitchListTile(
-            title: Text(value.name),
-            subtitle: Text(subtitle),
-            value: false,
-            onChanged: (bool? value) {},
-          ),
+        return SwitchListTile(
+          title: Text(value.name),
+          subtitle: Text(subtitle),
+          value: false,
+          onChanged: (bool? value) {},
         );
       case AsyncLoading():
-        return Card(
-          child: const ListTile(
-            title: Text("Loading..."),
-            leading: CircularProgressIndicator(),
-          ),
+        return const ListTile(
+          title: Text("Loading..."),
+          leading: CircularProgressIndicator(),
         );
       case AsyncError(:final error, :final stackTrace):
         debugPrintStack(stackTrace: stackTrace);
-        return Card(
-          child: ListTile(
-            title: Text("Error: $error"),
-          ),
+        return ListTile(
+          title: Text("Error: $error"),
         );
     }
   }
