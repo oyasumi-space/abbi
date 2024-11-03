@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../page/mods_page.dart';
+import '../page/settings_page.dart';
 import '../pod/mods_pod.dart';
 
 class HomeWidndow extends ConsumerWidget {
@@ -48,7 +49,7 @@ class _Page {
     required this.body,
   });
 
-  static final pages = [mods, test];
+  static final pages = [mods, settings, test];
 
   static final mods = _Page(
     title: "Mods",
@@ -65,6 +66,15 @@ class _Page {
       ],
     ),
     body: (context, ref) => ModsPage(),
+  );
+
+  static final settings = _Page(
+    title: "Settings",
+    icon: Icons.settings,
+    appBar: (context, ref) => AppBar(
+      title: const Text("Settings"),
+    ),
+    body: (context, ref) => const SettingsPage(),
   );
 
   static final test = _Page(

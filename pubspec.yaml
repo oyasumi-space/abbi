@@ -32,4 +32,3 @@ flutter:
   assets:
     - .git/HEAD
     - .git/refs/heads/
-
