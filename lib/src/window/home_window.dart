@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../page/mods_page.dart';
 import '../page/settings_page.dart';
 import '../pod/mods_pod.dart';
+import '../pod/win32_registry_pod.dart';
 
 class HomeWidndow extends ConsumerWidget {
   const HomeWidndow({super.key});
@@ -81,6 +82,13 @@ class _Page {
     title: "Test",
     icon: Icons.bug_report,
     appBar: (context, ref) => AppBar(),
-    body: (context, ref) => const Center(child: Text("Test")),
+    body: (context, ref) => Consumer(
+      builder: (context, ref, child) {
+        final o = ref.watch(omoriRunningPod);
+        return Center(
+          child: Text(o.toString()),
+        );
+      },
+    ),
   );
 }

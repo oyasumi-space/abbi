@@ -201,13 +201,13 @@ packages:
     source: hosted
     version: "0.11.1"
   meta:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: meta
-      sha256: bdb68674043280c3428e9ec998512fb681678676b3c54e773629ffe74419f8c7
+      sha256: e3641ec5d63ebf0d9b41bd43201a66e3fc79a65db5f61fc181f04cd27aab950c
       url: "https://pub.dev"
     source: hosted
-    version: "1.15.0"
+    version: "1.16.0"
   package_info_plus:
     dependency: "direct main"
     description:
@@ -417,10 +417,10 @@ packages:
     dependency: transitive
     description:
       name: url_launcher_android
-      sha256: "0dea215895a4d254401730ca0ba8204b29109a34a99fb06ae559a2b60988d2de"
+      sha256: "6fc2f56536ee873eeb867ad176ae15f304ccccc357848b351f6f0d8d4a40d193"
       url: "https://pub.dev"
     source: hosted
-    version: "6.3.13"
+    version: "6.3.14"
   url_launcher_ios:
     dependency: transitive
     description:
@@ -497,18 +497,18 @@ packages:
     dependency: transitive
     description:
       name: win32
-      sha256: "10169d3934549017f0ae278ccb07f828f9d6ea21573bab0fb77b0e1ef0fce454"
+      sha256: "84ba388638ed7a8cb3445a320c8273136ab2631cd5f2c57888335504ddab1bc2"
       url: "https://pub.dev"
     source: hosted
-    version: "5.7.2"
+    version: "5.8.0"
   win32_registry:
     dependency: "direct main"
     description:
       name: win32_registry
-      sha256: "21ec76dfc731550fd3e2ce7a33a9ea90b828fdf19a5c3bcf556fa992cfa99852"
+      sha256: "12038454feaa0b1b8a58683a837c9189c08b01c28dbbc59811d3bd49f694c249"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.5"
+    version: "2.0.0"
   xdg_directories:
     dependency: transitive
     description:
@@ -518,5 +518,5 @@ packages:
     source: hosted
     version: "1.1.0"
 sdks:
-  dart: ">=3.5.0 <4.0.0"
+  dart: ">=3.5.4 <4.0.0"
   flutter: ">=3.24.0"

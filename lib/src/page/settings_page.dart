@@ -15,9 +15,9 @@ class SettingsPage extends ConsumerWidget {
           title: const Text('Game Path'),
           subtitle: HookConsumer(
             builder: (context, ref, child) {
-              final gamePathController = useTextEditingController(
-                text: ref.watch(gamePathConfigPod).value ?? '',
-              );
+              final gamePathController = useTextEditingController();
+              gamePathController.text =
+                  ref.watch(gamePathConfigPod).value ?? '';
               final error = ref.watch(gamePathConfigErrorPod).when(
                     data: (value) => value,
                     loading: () => null,

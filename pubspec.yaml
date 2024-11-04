@@ -6,7 +6,7 @@ publish_to: "none"
 version: 0.2.0
 
 environment:
-  sdk: ">=3.4.4 <4.0.0"
+  sdk: ">=3.5.4 <4.0.0"
 
 dependencies:
   archive: ^3.6.1
@@ -20,12 +20,15 @@ dependencies:
   path: ^1.9.0
   shared_preferences: ^2.3.1
   url_launcher: ^6.3.0
-  win32_registry: ^1.1.4
+  win32_registry: ^2.0.0
 
 dev_dependencies:
   flutter_lints: ^5.0.0
   flutter_test:
     sdk: flutter
+
+dependency_overrides:
+  meta: ^1.16.0
 
 flutter:
   uses-material-design: true
