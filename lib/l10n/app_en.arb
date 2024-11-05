@@ -1,0 +1,15 @@
+{
+  "@@locale": "en",
+  "language": "English",
+  "@language": {},
+  "app_name": "ABII",
+  "@app_name": {},
+  "page_mods": "Mods",
+  "@page_mods": {},
+  "page_settings": "Settings",
+  "@page_settings": {},
+  "settings_category_general": "General",
+  "@settings_category_general": {},
+  "settings_title_language": "Language",
+  "@settings_title_language": {}
+}

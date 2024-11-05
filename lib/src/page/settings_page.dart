@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../pod/config_pod.dart';
 
@@ -12,30 +12,31 @@ class SettingsPage extends ConsumerWidget {
     return ListView(
       children: [
         ListTile(
-          title: const Text('Game Path'),
-          subtitle: HookConsumer(
-            builder: (context, ref, child) {
-              final gamePathController = useTextEditingController();
-              gamePathController.text =
-                  ref.watch(gamePathConfigPod).value ?? '';
-              final error = ref.watch(gamePathConfigErrorPod).when(
-                    data: (value) => value,
-                    loading: () => null,
-                    error: (error, _) => error.toString(),
-                  );
-              return TextField(
-                controller: gamePathController,
-                decoration: InputDecoration(
-                  hintText: 'OMORI Game Path',
-                  errorText: error,
-                ),
-                onChanged: (value) {
-                  ref.read(gamePathConfigPod.notifier).set(value);
-                },
-              );
+          leading: Icon(Icons.language),
+          title: Text(AppLocalizations.of(context)!.settings_title_language),
+          trailing: DropdownButton<String>(
+            value: ref.watch(languagePod),
+            onChanged: (value) {
+              ref.read(languagePod.notifier).set(value);
             },
+            items: [
+              for (final locale in AppLocalizations.supportedLocales)
+                DropdownMenuItem(
+                  value: locale.languageCode,
+                  child: Localizations.override(
+                    context: context,
+                    locale: locale,
+                    child: Builder(
+                      builder: (context) =>
+                          Text(AppLocalizations.of(context)!.language),
+                    ),
+                  ),
+                ),
+            ],
           ),
         ),
+        Divider(),
+        ListTile(),
       ],
     );
   }

@@ -1,0 +1,9 @@
+{
+  "@@locale": "ja",
+  "language": "日本語",
+  "app_name": "ABII",
+  "page_mods": "MOD",
+  "page_settings": "設定",
+  "settings_category_general": "一般",
+  "settings_title_language": "言語"
+}

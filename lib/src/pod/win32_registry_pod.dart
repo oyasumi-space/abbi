@@ -19,6 +19,16 @@ final _omoriRunningPod =
           'Running',
         ));
 
+final omoriInstalledPod = Provider<bool>((ref) {
+  return ref.watch(_omoriInstalledPod) == '1';
+});
+
+final _omoriInstalledPod =
+    NotifierProvider<Win32RegistryPod, String?>(() => Win32RegistryPod(
+          Registry.currentUser.createKey(r'SOFTWARE\Valve\Steam\Apps\1150690'),
+          'Installed',
+        ));
+
 class Win32RegistryPod extends Notifier<String?> {
   final RegistryKey key;
   final String name;

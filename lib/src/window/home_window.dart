@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../page/mods_page.dart';
 import '../page/settings_page.dart';
@@ -21,7 +22,7 @@ class HomeWidndow extends ConsumerWidget {
               .map(
                 (page) => ListTile(
                   leading: Icon(page.icon),
-                  title: Text(page.title),
+                  title: Text(page.title(context)),
                   onTap: () {
                     ref.read(_pagePod.notifier).state = page;
                     Navigator.pop(context);
@@ -38,7 +39,7 @@ class HomeWidndow extends ConsumerWidget {
 final _pagePod = StateProvider((ref) => _Page.mods);
 
 class _Page {
-  final String title;
+  final String Function(BuildContext) title;
   final IconData icon;
   final AppBar Function(BuildContext context, WidgetRef ref) appBar;
   final Widget Function(BuildContext context, WidgetRef ref) body;
@@ -53,10 +54,10 @@ class _Page {
   static final pages = [mods, settings, test];
 
   static final mods = _Page(
-    title: "Mods",
+    title: (context) => AppLocalizations.of(context)!.page_mods,
     icon: Icons.extension,
     appBar: (context, ref) => AppBar(
-      title: const Text("Home"),
+      title: Text(AppLocalizations.of(context)!.page_mods),
       actions: [
         IconButton(
           icon: const Icon(Icons.refresh),
@@ -70,16 +71,16 @@ class _Page {
   );
 
   static final settings = _Page(
-    title: "Settings",
+    title: (context) => AppLocalizations.of(context)!.page_settings,
     icon: Icons.settings,
     appBar: (context, ref) => AppBar(
-      title: const Text("Settings"),
+      title: Text(AppLocalizations.of(context)!.page_settings),
     ),
     body: (context, ref) => const SettingsPage(),
   );
 
   static final test = _Page(
-    title: "Test",
+    title: (context) => "Test",
     icon: Icons.bug_report,
     appBar: (context, ref) => AppBar(),
     body: (context, ref) => Consumer(
