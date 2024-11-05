@@ -5,7 +5,7 @@ import 'package:win32_registry/win32_registry.dart';
 
 final steamPathPod =
     NotifierProvider<Win32RegistryPod, String?>(() => Win32RegistryPod(
-          Registry.localMachine.createKey(r'SOFTWARE\Valve\Steam'),
+          Registry.currentUser.createKey(r'SOFTWARE\Valve\Steam'),
           'SteamPath',
         ));
 
@@ -46,6 +46,7 @@ class Win32RegistryPod extends Notifier<String?> {
 
   String? _get() {
     final value = key.getValue(name);
+    print(value);
     if (value == null) {
       return null;
     }

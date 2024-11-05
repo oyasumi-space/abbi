@@ -4,6 +4,9 @@ import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+final modsPathConfigPod = NotifierProvider<ConfigValueNotifier<String>, String>(
+  () => ConfigValueNotifier('mods_path', $path.join('{omori}', 'mods')),
+);
 final languagePod = NotifierProvider<ConfigValueNotifier<String>, String>(
   () => ConfigValueNotifier('language', 'en'),
 );
