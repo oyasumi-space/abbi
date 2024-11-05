@@ -1,36 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../page/mods_page.dart';
 import '../page/settings_page.dart';
 import '../page/test_page.dart';
 import '../pod/mods_pod.dart';
+import '../view/launch_omori_fab.dart';
 
-class HomeWidndow extends ConsumerWidget {
+class HomeWidndow extends HookConsumerWidget {
   const HomeWidndow({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final page = ref.watch(_pagePod);
+    final pageIndex = useState(0);
+    final page = _Page.pages[pageIndex.value];
     return Scaffold(
       appBar: page.appBar(context, ref),
-      body: page.body(context, ref),
-      drawer: Drawer(
-        child: ListView(
-          children: _Page.pages
-              .map(
-                (page) => ListTile(
-                  leading: Icon(page.icon),
-                  title: Text(page.title(context)),
-                  onTap: () {
-                    ref.read(_pagePod.notifier).state = page;
-                    Navigator.pop(context);
-                  },
-                ),
-              )
-              .toList(),
-        ),
+      body: Row(
+        children: [
+          NavigationRail(
+            leading: Padding(
+              padding: EdgeInsets.only(bottom: 16),
+              child: LaunchOmoriFab(),
+            ),
+            destinations: _Page.pages
+                .map(
+                  (page) => NavigationRailDestination(
+                    icon: Icon(page.icon),
+                    label: Text(page.title(context)),
+                  ),
+                )
+                .toList(),
+            selectedIndex: pageIndex.value,
+            onDestinationSelected: (index) {
+              pageIndex.value = index;
+            },
+            labelType: NavigationRailLabelType.all,
+          ),
+          const VerticalDivider(thickness: 1, width: 1),
+          Expanded(child: page.body(context, ref)),
+        ],
       ),
     );
   }

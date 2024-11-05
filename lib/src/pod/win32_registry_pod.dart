@@ -29,6 +29,16 @@ final _omoriInstalledPod =
           'Installed',
         ));
 
+final omoriUpdatingPod = Provider<bool>((ref) {
+  return ref.watch(_omoriUpdatingPod) == '1';
+});
+
+final _omoriUpdatingPod =
+    NotifierProvider<Win32RegistryPod, String?>(() => Win32RegistryPod(
+          Registry.currentUser.createKey(r'SOFTWARE\Valve\Steam\Apps\1150690'),
+          'Updating',
+        ));
+
 class Win32RegistryPod extends Notifier<String?> {
   final RegistryKey key;
   final String name;
@@ -37,16 +47,8 @@ class Win32RegistryPod extends Notifier<String?> {
 
   @override
   String? build() {
-    final sub = key.onChanged().listen((event) {
-      state = _get();
-    });
-    ref.onDispose(sub.cancel);
-    return _get();
-  }
-
-  String? _get() {
+    ref.watch(_win32RegistrySubPod(key));
     final value = key.getValue(name);
-    print(value);
     if (value == null) {
       return null;
     }
@@ -60,3 +62,6 @@ class Win32RegistryPod extends Notifier<String?> {
     }
   }
 }
+
+final _win32RegistrySubPod =
+    StreamProvider.family<void, RegistryKey>((ref, arg) => arg.onChanged());

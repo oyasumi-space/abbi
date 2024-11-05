@@ -10,6 +10,7 @@ import 'package:path/path.dart' as $path;
 import '../entity/mod.dart';
 import '../entity/mod_manifest.dart';
 import '../exception/exception.dart';
+import 'config_path_pod.dart';
 
 final modManifestFamily =
     FutureProvider.family<ModManifest, FileSystemEntity>((ref, fse) async {
@@ -45,7 +46,7 @@ final modsFSEPod =
 class ModsFSENotifier extends AsyncNotifier<List<FileSystemEntity>> {
   @override
   FutureOr<List<FileSystemEntity>> build() async {
-    final dir = Directory("G:/SteamLibrary/steamapps/common/OMORI/mods");
+    final dir = Directory(ref.watch(modsPathPod));
     final sub = dir.watch(events: FileSystemEvent.all).listen((event) async {
       state = AsyncValue.loading();
       state = AsyncValue.data(await dir.list().toList());

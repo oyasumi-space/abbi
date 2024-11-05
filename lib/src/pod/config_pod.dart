@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 final modsPathConfigPod = NotifierProvider<ConfigValueNotifier<String>, String>(
   () => ConfigValueNotifier('mods_path', $path.join('{omori}', 'mods')),
 );
+
 final languagePod = NotifierProvider<ConfigValueNotifier<String>, String>(
   () => ConfigValueNotifier('language', 'en'),
 );
@@ -24,8 +25,8 @@ class ConfigValueNotifier<T> extends Notifier<T> {
   }
 
   void set(T? value) {
-    state = value ?? _defaultValue;
-    ref.read(configPod.notifier).write(_key, state);
+    ref.read(configPod.notifier).write(_key, value);
+    ref.invalidateSelf();
   }
 }
 

@@ -5,5 +5,16 @@
   "page_mods": "MOD",
   "page_settings": "設定",
   "settings_category_general": "一般",
-  "settings_title_language": "言語"
+  "settings_title_language": "言語",
+  "settings_title_mods_path": "MODの保存フォルダ",
+  "settings_path_extra_desc": "以下の文字列は自動的に置き換えられます。",
+  "settings_path_extra_desc_omori": "ゲームのフォルダ",
+  "settings_path_extra_desc_abii": "このアプリのフォルダ",
+  "omori_status_not_installed": "OMORIがインストールされていません",
+  "omori_status_updating": "OMORIはアップデート中です",
+  "omori_status_running": "OMORIは現在起動中です",
+  "launch_omori": "MOD付きでOMORIを起動",
+  "app_locked": "ABBIはロック中",
+  "force_unlock": "強制アンロック",
+  "app_locked_desc": "OMORIを起動中なのでABBIはロックされています。\nOMORIを終了すると、自動でロックは解除されます。\n強制アンロックすると、MODのリンクが解除されるため、ゲームが起動中だった場合セーブデータ破損などの不具合が起こる可能性があります。\n自己責任で行ってください。"
 }

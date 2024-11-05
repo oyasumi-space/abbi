@@ -22,8 +22,9 @@ class PathNotifier extends Notifier<String> {
     if (omoriPath == null) {
       throw Exception('OMORI is not installed');
     }
-    path.replaceAll('{omori}', omoriPath);
-    path.replaceAll('{abbi}', $path.dirname(Platform.resolvedExecutable));
+    path = path.replaceAll('{omori}', omoriPath);
+    path =
+        path.replaceAll('{abbi}', $path.dirname(Platform.resolvedExecutable));
     return path;
   }
 }
