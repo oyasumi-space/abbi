@@ -35,7 +35,9 @@ class SettingsPage extends ConsumerWidget {
                       context: context,
                       locale: locale,
                       child: Builder(
-                        builder: (context) => Text(l10n.language),
+                        builder: (context) => Text(
+                          AppLocalizations.of(context)!.language,
+                        ),
                       ),
                     ),
                   ),
@@ -88,6 +90,13 @@ class SettingsPage extends ConsumerWidget {
             tooltip: l10n.settings_path_open,
             icon: Icon(Icons.folder_open),
           ),
+        ),
+        Divider(),
+        Consumer(
+          builder: (context, ref, _) => SwitchListTile(
+              title: Text(l10n.settings_title_dark_mode),
+              value: ref.watch(isDarkThemePod),
+              onChanged: ref.watch(isDarkThemePod.notifier).set),
         ),
       ],
     );

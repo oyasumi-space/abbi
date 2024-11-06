@@ -9,6 +9,8 @@ import 'window/home_window.dart';
 class App extends ConsumerWidget {
   const App({super.key});
 
+  static const _spaceParalaxColor = Color.fromARGB(255, 108, 14, 255);
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final language = ref.watch(languagePod);
@@ -22,6 +24,9 @@ class App extends ConsumerWidget {
       ],
       supportedLocales: AppLocalizations.supportedLocales,
       locale: Locale(language, ''),
+      theme: ThemeData.light().copyWith(primaryColor: _spaceParalaxColor),
+      darkTheme: ThemeData.dark().copyWith(primaryColor: _spaceParalaxColor),
+      themeMode: ref.watch(isDarkThemePod) ? ThemeMode.dark : ThemeMode.light,
     );
   }
 }

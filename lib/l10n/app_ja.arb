@@ -8,6 +8,7 @@
   "settings_title_language": "言語",
   "settings_title_mods_path": "MODの保存フォルダ",
   "settings_title_profiles_path": "プロファイルの保存フォルダ",
+  "settings_title_dark_mode": "ダークモード",
   "settings_path_extra_desc": "以下の文字列は自動的に置き換えられます。",
   "settings_path_extra_desc_omori": "ゲームのフォルダ",
   "settings_path_extra_desc_abii": "このアプリのフォルダ",

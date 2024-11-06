@@ -16,6 +16,8 @@
   "@settings_title_mods_path": {},
   "settings_title_profiles_path": "Profiles Save Folder",
   "@settings_title_profiles_path": {},
+  "settings_title_dark_mode": "Dark Mode",
+  "@settings_title_dark_mode": {},
   "settings_path_extra_desc": "The following strings will be replaced automatically.",
   "@settings_path_extra_desc": {},
   "settings_path_extra_desc_omori": "Game Folder",

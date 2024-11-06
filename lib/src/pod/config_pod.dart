@@ -17,6 +17,10 @@ final languagePod = NotifierProvider<ConfigValueNotifier<String>, String>(
   () => ConfigValueNotifier('language', 'en'),
 );
 
+final isDarkThemePod = NotifierProvider<ConfigValueNotifier<bool>, bool>(
+  () => ConfigValueNotifier('dark_theme', false),
+);
+
 class ConfigValueNotifier<T> extends Notifier<T> {
   ConfigValueNotifier(this._key, this._defaultValue);
 
