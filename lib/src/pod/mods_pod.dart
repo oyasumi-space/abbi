@@ -52,7 +52,11 @@ class ModsFSENotifier extends AsyncNotifier<List<FileSystemEntity>> {
       state = AsyncValue.data(await dir.list().toList());
     });
     ref.onDispose(sub.cancel);
-    return await dir.list().toList();
+    return await dir.list().where((fse) {
+      if (fse is Directory) return true;
+      if (fse is File && $path.extension(fse.path) == '.zip') return true;
+      return false;
+    }).toList();
   }
 }
 

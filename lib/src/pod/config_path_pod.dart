@@ -10,6 +10,10 @@ final modsPathPod = NotifierProvider<PathNotifier, String>(
   () => PathNotifier(modsPathConfigPod),
 );
 
+final profilesPathPod = NotifierProvider<PathNotifier, String>(
+  () => PathNotifier(profilesPathConfigPod),
+);
+
 class PathNotifier extends Notifier<String> {
   final NotifierProvider<ConfigValueNotifier<String>, String> pod;
 

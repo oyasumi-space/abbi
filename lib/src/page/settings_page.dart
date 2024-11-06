@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -12,12 +14,13 @@ class SettingsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     return ListView(
       children: [
         ListTile(
           leading: Icon(Icons.language),
-          title: Text(AppLocalizations.of(context)!.settings_title_language),
-          subtitle: Text(AppLocalizations.of(context)!.language),
+          title: Text(l10n.settings_title_language),
+          subtitle: Text(l10n.language),
           onTap: () => showDialog(
             context: context,
             builder: (_) => SimpleDialog(
@@ -32,8 +35,7 @@ class SettingsPage extends ConsumerWidget {
                       context: context,
                       locale: locale,
                       child: Builder(
-                        builder: (context) =>
-                            Text(AppLocalizations.of(context)!.language),
+                        builder: (context) => Text(l10n.language),
                       ),
                     ),
                   ),
@@ -44,18 +46,48 @@ class SettingsPage extends ConsumerWidget {
         Divider(),
         ListTile(
           leading: Icon(Icons.folder),
-          title: Text(AppLocalizations.of(context)!.settings_title_mods_path),
+          title: Text(l10n.settings_title_mods_path),
           subtitle: Text(ref.watch(modsPathPod)),
           onTap: () {
             showDialog(
               context: context,
               builder: (_) => _SettingsPathDialog(
-                title: AppLocalizations.of(context)!.settings_title_mods_path,
+                title: l10n.settings_title_mods_path,
                 defaultPath: $path.join('{omori}', 'mods'),
                 pod: modsPathConfigPod,
               ),
             );
           },
+          trailing: IconButton(
+            onPressed: () {
+              Process.run("explorer", [ref.read(modsPathPod)]);
+            },
+            tooltip: l10n.settings_path_open,
+            icon: Icon(Icons.folder_open),
+          ),
+        ),
+        Divider(),
+        ListTile(
+          leading: Icon(Icons.folder),
+          title: Text(l10n.settings_title_profiles_path),
+          subtitle: Text(ref.watch(profilesPathPod)),
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (_) => _SettingsPathDialog(
+                title: l10n.settings_title_profiles_path,
+                defaultPath: $path.join('{abbi}', 'profiles'),
+                pod: profilesPathConfigPod,
+              ),
+            );
+          },
+          trailing: IconButton(
+            onPressed: () {
+              Process.run("explorer", [ref.read(profilesPathPod)]);
+            },
+            tooltip: l10n.settings_path_open,
+            icon: Icon(Icons.folder_open),
+          ),
         ),
       ],
     );
@@ -104,7 +136,9 @@ class _SettingsPathDialog extends HookConsumerWidget {
         ),
         TextButton(
           onPressed: () {
-            ref.read(pod.notifier).set(controller.text);
+            String? value = controller.text;
+            if (value == '') value = null;
+            ref.read(pod.notifier).set(value);
             Navigator.pop(context);
           },
           child: Text(MaterialLocalizations.of(context).saveButtonLabel),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -47,8 +46,6 @@ class HomeWidndow extends HookConsumerWidget {
     );
   }
 }
-
-final _pagePod = StateProvider((ref) => _Page.mods);
 
 class _Page {
   final String Function(BuildContext) title;

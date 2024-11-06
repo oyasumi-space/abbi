@@ -8,6 +8,11 @@ final modsPathConfigPod = NotifierProvider<ConfigValueNotifier<String>, String>(
   () => ConfigValueNotifier('mods_path', $path.join('{omori}', 'mods')),
 );
 
+final profilesPathConfigPod =
+    NotifierProvider<ConfigValueNotifier<String>, String>(
+  () => ConfigValueNotifier('profiles_path', $path.join('{abbi}', 'profiles')),
+);
+
 final languagePod = NotifierProvider<ConfigValueNotifier<String>, String>(
   () => ConfigValueNotifier('language', 'en'),
 );
