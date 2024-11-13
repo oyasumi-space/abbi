@@ -10,14 +10,16 @@ class ModsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final modsFSEAsync = ref.watch(modsFSEPod);
-
-    switch (modsFSEAsync) {
-      case AsyncData(:final value):
+    final modsNameAsync = ref.watch(availableModsNamePod);
+    switch (modsNameAsync) {
+      case AsyncData(:final value, :final isRefreshing):
+        if (isRefreshing) {
+          return const Center(child: CircularProgressIndicator());
+        }
         return ListView.separated(
           itemBuilder: (context, index) {
-            final fse = value[index];
-            return _ModsPageItem(fse);
+            final name = value[index];
+            return _ModsPageItem(name);
           },
           separatorBuilder: (context, index) => const Divider(),
           itemCount: value.length,
@@ -32,20 +34,20 @@ class ModsPage extends ConsumerWidget {
 }
 
 class _ModsPageItem extends ConsumerWidget {
-  const _ModsPageItem(this.fse);
+  const _ModsPageItem(this.name);
 
-  final FileSystemEntity fse;
+  final String name;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final modManifestAsync = ref.watch(modManifestFamily(fse));
-    final mod = ref.watch(modFamily(fse));
-    switch (modManifestAsync) {
+    final modAsync = ref.watch(modFamilyPod(name));
+    switch (modAsync) {
       case AsyncData(:final value):
-        var subtitle = value.id;
-        subtitle += ' - v${value.version}';
-        subtitle +=
-            ' - ${mod.isFile ? '🗒️' : '📁'}${mod.name}${mod.isFile ? '' : '/'}';
+        final mod = value;
+        final manifest = mod.manifest;
+        var subtitle = '${manifest.id} - v${manifest.version}';
+        subtitle += ' - ${mod.typeEmoji}${mod.name}';
+        if (mod.type == FileSystemEntityType.directory) subtitle += '/';
         return SwitchListTile(
           title: Text(value.name),
           subtitle: Text(subtitle),

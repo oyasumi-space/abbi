@@ -38,6 +38,6 @@
   "@app_locked": {},
   "force_unlock": "Force Unlock",
   "@force_unlock": {},
-  "app_locked_desc": "ABBI is locked because OMORI is running.\nThe lock will be unlocked automatically when you close OMORI.\nIf you force unlock, the MOD link will be removed, which may cause problems such as corrupted save data if the game is running.\nProceed at your own risk",
+  "app_locked_desc": "ABBI is locked because OMORI is running. \nWhen you close OMORI, it will be unlocked automatically. \nIf you force unlock while the game is running, the link to the MOD will be removed, \nwhich may cause problems such as corrupted save data. \nPlease proceed at your own risk.",
   "@app_locked_desc": {}
 }
