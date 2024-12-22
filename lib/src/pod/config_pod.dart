@@ -13,6 +13,11 @@ final profilesPathConfigPod =
   () => ConfigValueNotifier('profiles_path', $path.join('{abbi}', 'profiles')),
 );
 
+final currentProfileIdPod =
+    NotifierProvider<ConfigValueNotifier<String>, String>(
+  () => ConfigValueNotifier('current_profile', '0'), // 0 is default profile id
+);
+
 final languagePod = NotifierProvider<ConfigValueNotifier<String>, String>(
   () => ConfigValueNotifier('language', 'en'),
 );

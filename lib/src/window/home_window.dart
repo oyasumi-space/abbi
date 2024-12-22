@@ -4,9 +4,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../page/mods_page.dart';
+import '../page/profiles_page.dart';
 import '../page/settings_page.dart';
 import '../page/test_page.dart';
 import '../pod/mods_pod.dart';
+import '../pod/profile_pod.dart';
 import '../view/launch_omori_fab.dart';
 
 class HomeWidndow extends HookConsumerWidget {
@@ -60,7 +62,7 @@ class _Page {
     required this.body,
   });
 
-  static final pages = [mods, settings, test];
+  static final pages = [mods, profiles, settings, test];
 
   static final mods = _Page(
     title: (context) => AppLocalizations.of(context)!.page_mods,
@@ -86,6 +88,24 @@ class _Page {
       title: Text(AppLocalizations.of(context)!.page_settings),
     ),
     body: (context, ref) => const SettingsPage(),
+  );
+
+  static final profiles = _Page(
+    title: (context) => AppLocalizations.of(context)!.page_profiles,
+    icon: Icons.account_circle,
+    appBar: (context, ref) => AppBar(
+      title: Text(AppLocalizations.of(context)!.page_profiles),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.add),
+          tooltip: AppLocalizations.of(context)!.action_add_profiles,
+          onPressed: () {
+            ref.read(profileFilesPod.notifier).create("New Profile");
+          },
+        ),
+      ],
+    ),
+    body: (context, ref) => const ProfilesPage(),
   );
 
   static final test = _Page(

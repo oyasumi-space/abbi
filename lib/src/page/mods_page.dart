@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../pod/mods_pod.dart';
+import '../pod/profile_pod.dart';
 
 class ModsPage extends ConsumerWidget {
   const ModsPage({super.key});
@@ -41,6 +42,9 @@ class _ModsPageItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final modAsync = ref.watch(modFamilyPod(name));
+    final profileFile = ref.watch(currentProfileFilePod);
+    final profileAsync = ref.watch(profilePod(profileFile));
+    final mods = profileAsync.value?.mods ?? [];
     switch (modAsync) {
       case AsyncData(:final value):
         final mod = value;

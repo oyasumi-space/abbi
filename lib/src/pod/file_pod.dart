@@ -5,6 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 final watchDirPod = StreamProvider.family<List<FileSystemEntity>, String>(
   (ref, arg) async* {
     final dir = Directory(arg);
+    if (!await dir.exists()) {
+      await dir.create(recursive: true);
+    }
     cb(_) async {
       ref.state = await AsyncValue.guard(dir.list().toList);
     }
