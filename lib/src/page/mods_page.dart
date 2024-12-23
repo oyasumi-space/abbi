@@ -59,11 +59,10 @@ class _ModsPageItem extends ConsumerWidget {
           onChanged: (bool? value) {
             if (value == null) return;
             if (value) {
-              ref.read(profilePod(profileFile).notifier).enableMod(mod.name);
+              ref.read(profilePod(profileFile).notifier).enableMod(mod);
             } else {
-              ref.read(profilePod(profileFile).notifier).disableMod(mod.name);
+              ref.read(profilePod(profileFile).notifier).disableMod(mod);
             }
-            ref.invalidate(profilePod(profileFile));
           },
         );
       case AsyncLoading():

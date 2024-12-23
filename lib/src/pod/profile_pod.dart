@@ -4,10 +4,12 @@ import 'dart:io';
 import 'package:path/path.dart' as $path;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../entity/mod.dart';
 import '../entity/profile.dart';
 import 'config_path_pod.dart';
 import 'config_pod.dart';
 import 'file_pod.dart';
+import 'mods_pod.dart';
 
 final profilePod = AsyncNotifierProvider.autoDispose
     .family<ProfileNotifier, Profile, File>(ProfileNotifier.new);
@@ -19,19 +21,27 @@ class ProfileNotifier extends AutoDisposeFamilyAsyncNotifier<Profile, File> {
     return Profile.fromJson(jsonDecode(body));
   }
 
-  Future<void> enableMod(String name) async {
+  Future<void> enableMod(Mod mod) async {
     final profile = await future;
-    if (profile.mods.contains(name)) return;
-    profile.mods.add(name);
+    if (profile.mods.contains(mod.name)) return;
+    profile.mods.add(mod.name);
+    final availableMods = await ref.watch(availableModsPod.future);
+    for (final availableMod in availableMods) {
+      if (availableMod.name == mod.name) continue;
+      if (availableMod.manifest.id == mod.manifest.id) {
+        profile.mods.remove(availableMod.name);
+      }
+    }
     await arg.writeAsString(jsonEncode(profile.toJson()));
-    // TODO: auto disable conflicting mods
+    ref.invalidateSelf();
   }
 
-  Future<void> disableMod(String name) async {
+  Future<void> disableMod(Mod mod) async {
     final profile = await future;
-    if (!profile.mods.contains(name)) return;
-    profile.mods.remove(name);
-    await arg.writeAsString(jsonEncode(profile.toJson()));
+    if (profile.mods.remove(mod.name)) {
+      await arg.writeAsString(jsonEncode(profile.toJson()));
+      ref.invalidateSelf();
+    }
   }
 }
 

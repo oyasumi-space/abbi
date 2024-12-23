@@ -60,6 +60,13 @@ final availableModsNamePod =
     AsyncNotifierProvider<AvailableModsNamesNotifier, List<String>>(
         AvailableModsNamesNotifier.new);
 
+final availableModsPod = FutureProvider<List<Mod>>((ref) async {
+  final names = await ref.watch(availableModsNamePod.future);
+  return Future.wait(
+    names.map((name) => ref.watch(modFamilyPod(name).future)),
+  );
+});
+
 class AvailableModsNamesNotifier extends AsyncNotifier<List<String>> {
   @override
   FutureOr<List<String>> build() async {
