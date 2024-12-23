@@ -44,7 +44,7 @@ class _ModsPageItem extends ConsumerWidget {
     final modAsync = ref.watch(modFamilyPod(name));
     final profileFile = ref.watch(currentProfileFilePod);
     final profileAsync = ref.watch(profilePod(profileFile));
-    final mods = profileAsync.value?.mods ?? [];
+    final enabledMods = profileAsync.value?.mods ?? [];
     switch (modAsync) {
       case AsyncData(:final value):
         final mod = value;
@@ -55,8 +55,16 @@ class _ModsPageItem extends ConsumerWidget {
         return SwitchListTile(
           title: Text(value.name),
           subtitle: Text(subtitle),
-          value: false,
-          onChanged: (bool? value) {},
+          value: enabledMods.contains(mod.name),
+          onChanged: (bool? value) {
+            if (value == null) return;
+            if (value) {
+              ref.read(profilePod(profileFile).notifier).enableMod(mod.name);
+            } else {
+              ref.read(profilePod(profileFile).notifier).disableMod(mod.name);
+            }
+            ref.invalidate(profilePod(profileFile));
+          },
         );
       case AsyncLoading():
         return const ListTile(

@@ -18,6 +18,21 @@ class ProfileNotifier extends AutoDisposeFamilyAsyncNotifier<Profile, File> {
     final body = await arg.readAsString();
     return Profile.fromJson(jsonDecode(body));
   }
+
+  Future<void> enableMod(String name) async {
+    final profile = await future;
+    if (profile.mods.contains(name)) return;
+    profile.mods.add(name);
+    await arg.writeAsString(jsonEncode(profile.toJson()));
+    // TODO: auto disable conflicting mods
+  }
+
+  Future<void> disableMod(String name) async {
+    final profile = await future;
+    if (!profile.mods.contains(name)) return;
+    profile.mods.remove(name);
+    await arg.writeAsString(jsonEncode(profile.toJson()));
+  }
 }
 
 final profileFilesPod = AsyncNotifierProvider<ProfileFilesNotifier, List<File>>(
