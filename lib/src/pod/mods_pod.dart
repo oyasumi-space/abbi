@@ -12,6 +12,7 @@ import '../entity/mod_manifest.dart';
 import '../exception/exception.dart';
 import 'config_path_pod.dart';
 import 'file_pod.dart';
+import 'profile_pod.dart';
 
 final modFamilyPod = FutureProvider.family<Mod, String>((ref, name) async {
   final path = ref.watch(modPathFamily(name));
@@ -81,3 +82,12 @@ class AvailableModsNamesNotifier extends AsyncNotifier<List<String>> {
         .toList();
   }
 }
+
+final enabledModsPod = FutureProvider.autoDispose((ref) async {
+  final profileFile = ref.watch(currentProfileFilePod);
+  final profile = await ref.watch(profilePod(profileFile).future);
+  return (await Future.wait(
+    profile.mods.map((name) => ref.watch(modFamilyPod(name).future)),
+  ))
+      .toList();
+});

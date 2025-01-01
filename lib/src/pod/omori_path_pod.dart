@@ -26,3 +26,7 @@ final omoriPathProvider = Provider<String?>((ref) {
   }
   return null;
 });
+
+final omoriModPath = Provider.family<String, String>((ref, name) {
+  return $path.join(ref.watch(omoriPathProvider)!, 'www', 'mods', name);
+});

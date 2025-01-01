@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../pod/links_pod.dart';
 import '../pod/win32_registry_pod.dart';
 
 class AppLockDialog extends HookConsumerWidget {
@@ -13,7 +14,7 @@ class AppLockDialog extends HookConsumerWidget {
     final closing = useState(false);
     ref.listen(omoriRunningPod, (o, n) {
       if ((o ?? false) && !n) {
-        _close(context, closing);
+        _close(context, ref, closing);
       }
     });
     return AlertDialog(
@@ -24,7 +25,7 @@ class AppLockDialog extends HookConsumerWidget {
             ? const CircularProgressIndicator()
             : TextButton(
                 onPressed: () {
-                  _close(context, closing);
+                  _close(context, ref, closing);
                 },
                 child: Text(AppLocalizations.of(context)!.force_unlock),
               ),
@@ -32,10 +33,10 @@ class AppLockDialog extends HookConsumerWidget {
     );
   }
 
-  Future<void> _close(BuildContext context, ValueNotifier<bool> closing) async {
+  Future<void> _close(
+      BuildContext context, WidgetRef ref, ValueNotifier<bool> closing) async {
     closing.value = true;
-    await Future.delayed(
-        const Duration(milliseconds: 1430)); // TODO: remove mods link
+    await ref.read(linksPod.notifier).removeLinks();
     closing.value = false;
     if (context.mounted) {
       Navigator.pop(context);
