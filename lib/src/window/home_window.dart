@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import '../page/mods_page.dart';
 import '../page/profiles_page.dart';
 import '../page/settings_page.dart';
 import '../page/test_page.dart';
+import '../pod/config_path_pod.dart';
 import '../pod/mods_pod.dart';
 import '../pod/profile_pod.dart';
 import '../view/launch_omori_fab.dart';
@@ -70,6 +72,15 @@ class _Page {
     appBar: (context, ref) => AppBar(
       title: Text(AppLocalizations.of(context)!.page_mods),
       actions: [
+        IconButton(
+          icon: const Icon(Icons.folder_open),
+          tooltip: AppLocalizations.of(context)!.action_open_explorer,
+          onPressed: () async {
+            final path = ref.read(modsPathPod);
+            final url = "file://$path";
+            await launchUrlString(url);
+          },
+        ),
         IconButton(
           icon: const Icon(Icons.refresh),
           onPressed: () {

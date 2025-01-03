@@ -6,6 +6,7 @@
   "page_profiles": "プロファイル",
   "page_settings": "設定",
   "action_add_profiles": "新しいプロファイルを追加",
+  "action_open_explorer": "エクスプローラーで開く",
   "settings_category_general": "一般",
   "settings_title_language": "言語",
   "settings_title_mods_path": "MODの保存フォルダ",
@@ -26,6 +27,5 @@
   "app_locked": "ABBIはロック中",
   "force_unlock": "強制アンロック",
   "app_locked_desc": "OMORIを起動中なのでABBIはロックされています。\nOMORIを終了すると、自動でロックは解除されます。\nゲームの起動中に強制アンロックすると、MODのリンクが解除されるため、\nセーブデータ破損などの不具合が起こる可能性があります。\n自己責任で行ってください。",
-  "loading": "Loading...",
-  "@loading": {}
+  "loading": "ロード中..."
 }

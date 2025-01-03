@@ -12,6 +12,8 @@
   "@page_settings": {},
   "action_add_profiles": "Add New Profiles",
   "@action_add_profiles": {},
+  "action_open_explorer": "Open in Explorer",
+  "@action_open_explorer": {},
   "settings_category_general": "General",
   "@settings_category_general": {},
   "settings_title_language": "Language",
