@@ -17,40 +17,30 @@ import 'profile_pod.dart';
 final modFamilyPod = FutureProvider.family<Mod, String>((ref, name) async {
   final path = ref.watch(modPathFamily(name));
   final type = FileSystemEntity.typeSync(path);
+  late ModManifest manifest;
   switch (type) {
     case FileSystemEntityType.file:
-      return Mod(
-          name, type, await ref.watch(_fileModManifestFamily(path).future));
+      manifest = await compute((file) {
+        final zip = ZipDecoder().decodeBytes(file.readAsBytesSync());
+        final manifestFile = zip.files.firstWhere((file) {
+          final sp = $path.split(file.name);
+          return sp.length == 2 && sp[1] == "mod.json";
+        });
+        final json = utf8.decode(manifestFile.content as List<int>);
+        return ModManifest.fromJson(jsonDecode(json));
+      }, await ref.watch(watchFilePod(path).future));
     case FileSystemEntityType.directory:
-      return Mod(
-          name, type, await ref.watch(_dirModManifestFamily(path).future));
+      final manifestPath = $path.join(path, "mod.json");
+      final file = await ref.watch(watchFilePod(manifestPath).future);
+      if (!await file.exists()) {
+        throw NotModEntityException.notFoundManifestFile;
+      }
+      final json = await file.readAsString();
+      manifest = ModManifest.fromJson(jsonDecode(json));
     default:
       throw NotModEntityException.unknown;
   }
-});
-
-final _fileModManifestFamily =
-    FutureProvider.family<ModManifest, String>((ref, path) async {
-  return await compute((file) {
-    final zip = ZipDecoder().decodeBytes(file.readAsBytesSync());
-    final manifestFile = zip.files.firstWhere((file) {
-      final sp = $path.split(file.name);
-      return sp.length == 2 && sp[1] == "mod.json";
-    });
-    final json = utf8.decode(manifestFile.content as List<int>);
-    return ModManifest.fromJson(jsonDecode(json));
-  }, await ref.watch(watchFilePod(path).future));
-});
-
-final _dirModManifestFamily =
-    FutureProvider.family<ModManifest, String>((ref, path) async {
-  final file =
-      await ref.watch(watchFilePod($path.join(path, "mod.json")).future);
-  if (!await file.exists()) {
-    throw NotModEntityException.notFoundManifestFile;
-  }
-  final json = await file.readAsString();
-  return ModManifest.fromJson(jsonDecode(json));
+  return Mod(name, type, manifest);
 });
 
 final modPathFamily = Provider.family<String, String>((ref, name) {

@@ -73,6 +73,7 @@ class _Page {
         IconButton(
           icon: const Icon(Icons.refresh),
           onPressed: () {
+            ref.invalidate(modFamilyPod);
             ref.invalidate(availableModsNamePod);
           },
         ),
