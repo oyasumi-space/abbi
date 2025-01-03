@@ -13,6 +13,7 @@ class NotModEntityException implements Exception {
   static get unknown => NotModEntityException("Unknown error");
   static get notFoundManifestFile =>
       NotModEntityException("Manifest file not found");
+  static get notCorrectMod => NotModEntityException("Not correct mod");
 }
 
 class AbbiException implements Exception {

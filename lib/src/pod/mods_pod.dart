@@ -22,12 +22,25 @@ final modFamilyPod = FutureProvider.family<Mod, String>((ref, name) async {
     case FileSystemEntityType.file:
       manifest = await compute((file) {
         final zip = ZipDecoder().decodeBytes(file.readAsBytesSync());
-        final manifestFile = zip.files.firstWhere((file) {
-          final sp = $path.split(file.name);
-          return sp.length == 2 && sp[1] == "mod.json";
-        });
-        final json = utf8.decode(manifestFile.content as List<int>);
-        return ModManifest.fromJson(jsonDecode(json));
+        final tops = zip.files
+            .where((file) => $path.split(file.name).length == 1)
+            .toList();
+        if (tops.length != 1) {
+          throw NotModEntityException.notCorrectMod;
+        }
+        final root = tops.first;
+        if (root.isFile) {
+          throw NotModEntityException.notCorrectMod;
+        }
+        final manifestFile = zip.files.firstWhere(
+          (file) => file.name == "${root.name}mod.json",
+        );
+        final json = utf8.decode(manifestFile.content as Uint8List);
+        final manifest = ModManifest.fromJson(jsonDecode(json));
+        if ('${manifest.id}/' != root.name) {
+          throw NotModEntityException.notCorrectMod;
+        }
+        return manifest;
       }, await ref.watch(watchFilePod(path).future));
     case FileSystemEntityType.directory:
       final manifestPath = $path.join(path, "mod.json");
