@@ -11,7 +11,7 @@ class ModsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final modsNameAsync = ref.watch(availableModsNamePod);
+    final modsNameAsync = ref.watch(sortedAvailableModsNamePod);
     switch (modsNameAsync) {
       case AsyncData(:final value, :final isRefreshing):
         if (isRefreshing) {

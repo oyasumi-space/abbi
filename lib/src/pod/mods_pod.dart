@@ -35,7 +35,7 @@ final modFamilyPod = FutureProvider.family<Mod, String>((ref, name) async {
         final manifestFile = zip.files.firstWhere(
           (file) => file.name == "${root.name}mod.json",
         );
-        final json = utf8.decode(manifestFile.content as Uint8List);
+        final json = utf8.decode(manifestFile.content);
         final manifest = ModManifest.fromJson(jsonDecode(json));
         if ('${manifest.id}/' != root.name) {
           throw NotModEntityException.notCorrectMod;
@@ -60,10 +60,6 @@ final modPathFamily = Provider.family<String, String>((ref, name) {
   return $path.join(ref.watch(modsPathPod), name);
 });
 
-final availableModsNamePod =
-    AsyncNotifierProvider<AvailableModsNamesNotifier, List<String>>(
-        AvailableModsNamesNotifier.new);
-
 final availableModsPod = FutureProvider<List<Mod>>((ref) async {
   final names = await ref.watch(availableModsNamePod.future);
   return Future.wait(
@@ -71,20 +67,28 @@ final availableModsPod = FutureProvider<List<Mod>>((ref) async {
   );
 });
 
-class AvailableModsNamesNotifier extends AsyncNotifier<List<String>> {
-  @override
-  FutureOr<List<String>> build() async {
-    final files = await ref.watch(watchDirPod(ref.watch(modsPathPod)).future);
-    return files
-        .where((fse) {
-          if (fse is Directory) return true;
-          if (fse is File && $path.extension(fse.path) == '.zip') return true;
-          return false;
-        })
-        .map((fse) => $path.basename(fse.path))
-        .toList();
-  }
-}
+final availableModsNamePod = FutureProvider<List<String>>((ref) async {
+  final files = await ref.watch(watchDirPod(ref.watch(modsPathPod)).future);
+  return files
+      .where((fse) {
+        if (fse is Directory) return true;
+        if (fse is File && $path.extension(fse.path) == '.zip') return true;
+        return false;
+      })
+      .map((fse) => $path.basename(fse.path))
+      .toList();
+});
+
+final sortedAvailableModsNamePod = FutureProvider((ref) async {
+  final mods = await ref.watch(availableModsPod.future);
+
+  mods.sort((a, b) {
+    final c = a.manifest.priority.compareTo(b.manifest.priority);
+    if (c != 0) return c;
+    return a.manifest.id.compareTo(b.manifest.id);
+  });
+  return mods.map((mod) => mod.name).toList();
+});
 
 final enabledModsPod = FutureProvider.autoDispose((ref) async {
   final profileFile = ref.watch(currentProfileFilePod);

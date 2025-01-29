@@ -85,6 +85,7 @@ class _Page {
           icon: const Icon(Icons.refresh),
           onPressed: () {
             ref.invalidate(modFamilyPod);
+            ref.invalidate(availableModsPod);
             ref.invalidate(availableModsNamePod);
           },
         ),
