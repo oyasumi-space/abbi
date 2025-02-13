@@ -19,7 +19,7 @@ class LinksNotifier extends Notifier<bool> {
     _links.addAll(await Future.wait(enabledMods.map((mod) async {
       final path = ref.read(omoriModPath(mod.name));
       final target = ref.read(modPathFamily(mod.name));
-      return Link(path)..createSync(target);
+      return await Link(path).create(target);
     })));
   }
 
