@@ -8,14 +8,14 @@ class TestPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final o = ref.watch(omoriPathProvider);
+    final o = ref.watch(omoriPathPod);
     return Center(
       child: Column(
         children: [
           Text(o.toString()),
           ElevatedButton(
             onPressed: () {
-              ref.invalidate(omoriPathProvider);
+              ref.invalidate(omoriPathPod);
             },
             child: const Text("Refresh"),
           ),

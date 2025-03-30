@@ -3,7 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../pod/links_pod.dart';
+import '../pod/installer_pod.dart';
 import '../pod/win32_registry_pod.dart';
 
 class AppLockDialog extends HookConsumerWidget {
@@ -36,7 +36,7 @@ class AppLockDialog extends HookConsumerWidget {
   Future<void> _close(
       BuildContext context, WidgetRef ref, ValueNotifier<bool> closing) async {
     closing.value = true;
-    await ref.read(linksPod.notifier).removeLinks();
+    await ref.read(installerPod.notifier).uninstall();
     closing.value = false;
     if (context.mounted) {
       Navigator.pop(context);

@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-import '../pod/links_pod.dart';
+import '../pod/installer_pod.dart';
 import '../pod/win32_registry_pod.dart';
 import 'app_lock_dialog.dart';
 
@@ -30,12 +30,13 @@ class LaunchOmoriFab extends HookConsumerWidget {
           ? null
           : () async {
               isLoading.value = true;
-              ref.read(linksPod.notifier).createLinks();
+
               showDialog(
                 context: context,
                 builder: (_) => AppLockDialog(),
                 barrierDismissible: false,
               );
+              await ref.read(installerPod.notifier).install();
               await launchUrlString('steam://rungameid/1150690');
               isLoading.value = false;
             },

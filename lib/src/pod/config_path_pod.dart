@@ -22,7 +22,7 @@ class PathNotifier extends Notifier<String> {
   @override
   String build() {
     var path = ref.watch(pod);
-    final omoriPath = ref.watch(omoriPathProvider);
+    final omoriPath = ref.watch(omoriPathPod);
     if (omoriPath == null) {
       throw Exception('OMORI is not installed');
     }

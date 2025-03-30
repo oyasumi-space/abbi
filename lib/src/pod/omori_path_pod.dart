@@ -6,7 +6,7 @@ import 'package:vdf/vdf.dart';
 
 import 'win32_registry_pod.dart';
 
-final omoriPathProvider = Provider<String?>((ref) {
+final omoriPathPod = Provider<String?>((ref) {
   final steamPath = ref.watch(steamPathPod);
   if (steamPath == null) {
     return null;
@@ -22,11 +22,11 @@ final omoriPathProvider = Provider<String?>((ref) {
     if (!apps.keys.contains('1150690')) continue;
     var path = folders['path'] as String;
     path = path.replaceAll('\\\\', '\\');
-    return $path.join(path, 'steamapps', 'common', 'OMORI');
+    return $path.join(path, 'steamapps/common/OMORI');
   }
   return null;
 });
 
 final omoriModPath = Provider.family<String, String>((ref, name) {
-  return $path.join(ref.watch(omoriPathProvider)!, 'www', 'mods', name);
+  return $path.join(ref.watch(omoriPathPod)!, 'www', 'mods', name);
 });
