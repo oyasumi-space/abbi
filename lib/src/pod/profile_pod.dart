@@ -43,6 +43,15 @@ class ProfileNotifier extends AutoDisposeFamilyAsyncNotifier<Profile, File> {
       ref.invalidateSelf();
     }
   }
+
+  Future<void> rename(String name) async {
+    final profile = await future;
+    if (profile.name == name) return;
+    final json = profile.toJson();
+    json['name'] = name;
+    await arg.writeAsString(jsonEncode(json));
+    ref.invalidateSelf();
+  }
 }
 
 final profileFilesPod = AsyncNotifierProvider<ProfileFilesNotifier, List<File>>(

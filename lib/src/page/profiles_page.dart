@@ -1,9 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path/path.dart' as $path;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../app.dart';
 import '../entity/profile.dart';
 import '../pod/config_pod.dart';
 import '../pod/profile_pod.dart';
@@ -90,6 +93,15 @@ class _ProfilesPageItem extends HookConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(
+            icon: Icon(Icons.edit),
+            onPressed: () async {
+              showDialog(
+                context: context,
+                builder: (context) => _ProfileNameEditDialog(file),
+              );
+            },
+          ),
+          IconButton(
             icon: Icon(Icons.delete),
             onPressed: () async {
               file.delete();
@@ -105,6 +117,52 @@ class _ProfilesPageItem extends HookConsumerWidget {
           */
         ],
       ),
+    );
+  }
+}
+
+class _ProfileNameEditDialog extends HookConsumerWidget {
+  const _ProfileNameEditDialog(this.file);
+
+  final File file;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final name =
+        useTextEditingController(text: ref.watch(profilePod(file)).value!.name);
+    final appL10n = AppLocalizations.of(context)!;
+    final materialL10n = MaterialLocalizations.of(context);
+    final ee = ([
+      appL10n.ee_omori,
+      appL10n.ee_sunny,
+      appL10n.ee_aubrey,
+      appL10n.ee_kel,
+      appL10n.ee_hero,
+      appL10n.ee_basil,
+      appL10n.ee_mari,
+    ]..shuffle())
+        .first;
+    return AlertDialog(
+      title: Text(appL10n.action_edit_profile_name),
+      content: TextField(
+        controller: name,
+        decoration: InputDecoration(hintText: ee),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text(materialL10n.cancelButtonLabel),
+        ),
+        TextButton(
+          onPressed: () {
+            ref.read(profilePod(file).notifier).rename(name.text);
+            Navigator.of(context).pop();
+          },
+          child: Text(materialL10n.okButtonLabel),
+        ),
+      ],
     );
   }
 }
