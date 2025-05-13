@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../pod/installer_pod.dart';
 import '../pod/win32_registry_pod.dart';
 
@@ -11,6 +11,7 @@ class AppLockDialog extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final appL10n = AppLocalizations.of(context)!;
     final closing = useState(false);
     ref.listen(omoriRunningPod, (o, n) {
       if ((o ?? false) && !n) {
@@ -18,8 +19,8 @@ class AppLockDialog extends HookConsumerWidget {
       }
     });
     return AlertDialog(
-      title: Text(AppLocalizations.of(context)!.app_locked),
-      content: Text(AppLocalizations.of(context)!.app_locked_desc),
+      title: Text(appL10n.app_locked),
+      content: Text(appL10n.app_locked_desc),
       actions: [
         closing.value
             ? const CircularProgressIndicator()
@@ -27,7 +28,7 @@ class AppLockDialog extends HookConsumerWidget {
                 onPressed: () {
                   _close(context, ref, closing);
                 },
-                child: Text(AppLocalizations.of(context)!.force_unlock),
+                child: Text(appL10n.force_unlock),
               ),
       ],
     );

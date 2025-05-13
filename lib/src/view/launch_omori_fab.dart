@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:url_launcher/url_launcher_string.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../pod/installer_pod.dart';
 import '../pod/win32_registry_pod.dart';
 import 'app_lock_dialog.dart';
@@ -13,18 +14,19 @@ class LaunchOmoriFab extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final appL10n = AppLocalizations.of(context)!;
     final isLoading = useState(false);
     final installed = ref.watch(omoriInstalledPod);
     final updating = ref.watch(omoriUpdatingPod);
     final running = ref.watch(omoriRunningPod);
     final disabled = !installed || updating || running;
     final hint = !installed
-        ? AppLocalizations.of(context)!.omori_status_not_installed
+        ? appL10n.omori_status_not_installed
         : updating
-            ? AppLocalizations.of(context)!.omori_status_updating
+            ? appL10n.omori_status_updating
             : running
-                ? AppLocalizations.of(context)!.omori_status_running
-                : AppLocalizations.of(context)!.launch_omori;
+                ? appL10n.omori_status_running
+                : appL10n.launch_omori;
     return FloatingActionButton(
       onPressed: disabled || isLoading.value
           ? null

@@ -4,9 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path/path.dart' as $path;
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../app.dart';
+import '../../l10n/app_localizations.dart';
 import '../entity/profile.dart';
 import '../pod/config_pod.dart';
 import '../pod/profile_pod.dart';
