@@ -29,9 +29,10 @@ final watchDirPod =
   if (!await dir.exists()) {
     await dir.create(recursive: true);
   }
-  yield await dir.list().map((e) => e.path).toList();
 
+  getPaths() => dir.list().map((fse) => fse.path).toList();
+  yield await getPaths();
   await for (final _ in dir.watch()) {
-    yield await dir.list().map((e) => e.path).toList();
+    yield await getPaths();
   }
 });
