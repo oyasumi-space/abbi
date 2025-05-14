@@ -61,10 +61,10 @@ class ProfileFilesNotifier extends AsyncNotifier<List<File>> {
   @override
   FutureOr<List<File>> build() async {
     final path = ref.watch(profilesPathPod);
-    final files = await ref.watch(watchDirPod(path).future);
-    final result = files
-        .where((fse) => fse is File && $path.extension(fse.path) == '.json')
-        .cast<File>()
+    final paths = await ref.watch(watchDirPod(path).future);
+    final result = paths
+        .map((path) => ref.watch(fsePod(path)) as File)
+        .where((fse) => $path.extension(fse.path) == '.json')
         .toList();
     if (result.isEmpty) {
       final file = await create('Default', filename: '0');

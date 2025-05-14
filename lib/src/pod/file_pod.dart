@@ -2,29 +2,36 @@ import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final watchDirPod = StreamProvider.family<List<FileSystemEntity>, String>(
-  (ref, arg) async* {
-    final dir = Directory(arg);
-    if (!await dir.exists()) {
-      await dir.create(recursive: true);
-    }
-    cb(_) async {
-      ref.state = await AsyncValue.guard(dir.list().toList);
-    }
-
-    final sub = dir.watch().listen(cb);
-    ref.onDispose(sub.cancel);
-    cb(null);
-  },
-);
-
-final watchFilePod = StreamProvider.family<File, String>((ref, path) async* {
-  final file = File(path);
-  cb(_) async {
-    ref.state = AsyncValue.data(File(path));
+final fsePod = Provider.family<FileSystemEntity?, String>((ref, path) {
+  switch (FileSystemEntity.typeSync(path)) {
+    case FileSystemEntityType.file:
+      return File(path);
+    case FileSystemEntityType.directory:
+      return Directory(path);
+    default:
+      return null;
   }
+});
 
-  final sub = file.watch().listen(cb);
+final watchFsePod = Provider.family<void, String>((ref, path) {
+  final fse = ref.watch(fsePod(path));
+  if (fse is! File) return;
+  final sub = fse.watch().listen((_) {
+    ref.invalidate(fsePod(path));
+  });
+
   ref.onDispose(sub.cancel);
-  cb(null);
+});
+
+final watchDirPod =
+    StreamProvider.family<List<String>, String>((ref, path) async* {
+  final dir = Directory(path);
+  if (!await dir.exists()) {
+    await dir.create(recursive: true);
+  }
+  yield await dir.list().map((e) => e.path).toList();
+
+  await for (final _ in dir.watch()) {
+    yield await dir.list().map((e) => e.path).toList();
+  }
 });

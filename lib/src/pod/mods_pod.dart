@@ -20,6 +20,7 @@ final modFamilyPod = FutureProvider.family<Mod, String>((ref, name) async {
   late ModManifest manifest;
   switch (type) {
     case FileSystemEntityType.file:
+      ref.watch(watchFsePod(path));
       manifest = await compute((file) {
         final zip = ZipDecoder().decodeBytes(file.readAsBytesSync());
         final tops = zip.files
@@ -41,10 +42,11 @@ final modFamilyPod = FutureProvider.family<Mod, String>((ref, name) async {
           throw NotModEntityException.notCorrectMod;
         }
         return manifest;
-      }, await ref.watch(watchFilePod(path).future));
+      }, ref.watch(fsePod(path)) as File);
     case FileSystemEntityType.directory:
       final manifestPath = $path.join(path, "mod.json");
-      final file = await ref.watch(watchFilePod(manifestPath).future);
+      ref.watch(watchFsePod(manifestPath));
+      final file = ref.watch(fsePod(manifestPath)) as File;
       if (!await file.exists()) {
         throw NotModEntityException.notFoundManifestFile;
       }
@@ -68,14 +70,15 @@ final availableModsPod = FutureProvider<List<Mod>>((ref) async {
 });
 
 final availableModsNamePod = FutureProvider<List<String>>((ref) async {
-  final files = await ref.watch(watchDirPod(ref.watch(modsPathPod)).future);
-  return files
-      .where((fse) {
+  final paths = await ref.watch(watchDirPod(ref.watch(modsPathPod)).future);
+  return paths
+      .where((path) {
+        final fse = ref.watch(fsePod(path));
         if (fse is Directory) return true;
         if (fse is File && $path.extension(fse.path) == '.zip') return true;
         return false;
       })
-      .map((fse) => $path.basename(fse.path))
+      .map((path) => $path.basename(path))
       .toList();
 });
 
