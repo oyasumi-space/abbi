@@ -22,7 +22,7 @@ final omoriPathPod = Provider<String?>((ref) {
     if (!apps.keys.contains('1150690')) continue;
     var path = folders['path'] as String;
     path = path.replaceAll('\\\\', '\\');
-    return $path.join(path, 'steamapps/common/OMORI');
+    return $path.join(path, 'steamapps', 'common', 'OMORI');
   }
   return null;
 });
