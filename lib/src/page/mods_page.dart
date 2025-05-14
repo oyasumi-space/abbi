@@ -53,7 +53,7 @@ class _ModsPageItem extends ConsumerWidget {
         subtitle += ' - ${mod.typeEmoji}${mod.name}';
         if (mod.type == FileSystemEntityType.directory) subtitle += '/';
         return SwitchListTile(
-          title: Text(value.name),
+          title: Text(value.manifest.name),
           subtitle: Text(subtitle),
           value: enabledMods.contains(mod.name),
           onChanged: (bool? value) {
