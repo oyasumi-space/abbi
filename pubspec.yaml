@@ -3,7 +3,7 @@ description: "Mod Manager for OMORI"
 
 publish_to: "none"
 
-version: 0.143.3-beta
+version: 0.143.4-beta
 
 environment:
   sdk: ">=3.5.4 <4.0.0"
