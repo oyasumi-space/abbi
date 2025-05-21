@@ -24,16 +24,25 @@ jobs:
     - name: Build Windows release
       run: flutter build windows --release
 
-    - name: Upload Windows artifact
+    - name: Create Zip Archive
+      run: |
+        $sourcePath = "build/windows/x64/runner/Release/"
+        $zipFileName = "abbi-${{ github.ref_name }}.zip"
+        $outputPath = "dist/$zipFileName"
+        
+        New-Item -ItemType Directory -Force -Path "dist"
+        
+        Compress-Archive -Path $sourcePath -DestinationPath $outputPath
+      shell: powershell
+
+    - name: Upload Windows Zip Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: windows-app
-        path: build/windows/x64/runner/Release/
+        name: windows-app-zip
+        path: dist/abbi-${{ github.ref_name }}.zip
 
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v1
       if: startsWith(github.ref, 'refs/tags/')
       with:
-        files: |
-          build/windows/x64/runner/Release/*
-        prerelease: ${{ contains(github.ref, '-beta') || contains(github.ref, '-alpha') }}
+        files: dist/abbi-${{ github.ref_name }}.zip
